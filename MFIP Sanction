@@ -1,4 +1,4 @@
-'MFIP SANCTION/DWP DISQUALIFICATION CASE NOTE SCRIPT
+'MFIP SANCTION/DWP DISQUALIFICATION CASE NOTE SCRIPT WITH VARIALBE TITLE
 
 'STATS GATHERING----------------------------------------------------------------------------------------------------
 name_of_script = "NOTES - MFIP Sanction-DWP Disq.vbs"
@@ -33,35 +33,40 @@ END IF
 
 'DIALOGS-------------------------------
 'MFIP Sanction/DWP Disqualification Dialog Box
-BeginDialog MFIP_Sanction_DWP_Disq_Dialog, 0, 0, 286, 305, "MFIP Sanction - DWP Disqualification"
+BeginDialog MFIP_Sanction_DWP_Disq_Dialog, 0, 0, 296, 345, "MFIP Sanction - DWP Disqualification"
   Text 5, 10, 70, 10, "MAXIS Case Number"
   EditBox 75, 5, 90, 15, case_number
-  Text 5, 30, 80, 10, "HH Member's Number"
-  EditBox 90, 25, 35, 15, HH_Member_Number
-  Text 5, 50, 65, 10, "Type of Sanction:"
-  CheckBox 70, 50, 85, 10, "Employment Services", ES_Sanction_Checkbox
-  CheckBox 160, 50, 85, 10, "Child Support", Child_Support_Sanction_Checkbox
-  Text 5, 70, 140, 10, "Effective Date of Sanction/Disqualification"
-  EditBox 150, 65, 90, 15, Date_Sanction
-  Text 5, 90, 75, 10, "Number of occurences"
-  EditBox 90, 85, 30, 15, Number_Occurrences
-  Text 5, 110, 60, 10, "Sanction Percent:"
-  CheckBox 80, 110, 30, 10, "10%", ten_Percent_Checkbox
-  CheckBox 120, 110, 30, 10, "30%", thirty_Percent_Checkbox
-  CheckBox 160, 110, 30, 10, "100%", hundred_Percent_Checkbox
-  Text 5, 135, 170, 10, "Last day to cure (10 day cutoff or last day of month)"
-  EditBox 180, 130, 70, 15, Last_Day_Cure
-  Text 5, 155, 105, 25, "Vendor information (if vendoring due to the sanction, vendor #, etc.) "
-  EditBox 125, 155, 150, 25, Vendor_Information
-  Text 5, 195, 95, 20, "Status update information was sent to:"
-  CheckBox 105, 200, 90, 15, " Employment Services", Update_Sent_ES_Checkbox
-  CheckBox 195, 200, 85, 15, "Child Care Assistance", Update_Sent_CCA_Checkbox
-  CheckBox 5, 225, 30, 10, "FIAT", Fiat_Checkbox
-  Text 5, 255, 70, 10, "Sign your case note"
-  EditBox 80, 250, 90, 15, worker_signature
+  Text 170, 10, 80, 10, "HH Member's Number"
+  EditBox 255, 5, 35, 15, HH_Member_Number
+  Text 5, 30, 95, 10, "Type of Sanction (ES or CS)"
+  EditBox 110, 25, 85, 15, Type_Sanction
+  Text 5, 50, 140, 10, "Effective Date of Sanction/Disqualification"
+  EditBox 150, 45, 90, 15, Date_Sanction
+  Text 5, 70, 75, 10, "Number of occurences"
+  EditBox 90, 65, 30, 15, Number_Occurrences
+  Text 5, 85, 125, 10, "Sanction Percent (10%, 30%, or 100%)"
+  EditBox 145, 80, 50, 15, Sanction_Percentage
+  Text 5, 105, 145, 10, "Sanction information received from and how"
+  EditBox 150, 100, 140, 15, Sanction_Notification_Received
+  Text 5, 125, 170, 10, "Last day to cure (10 day cutoff or last day of month)"
+  EditBox 180, 120, 70, 15, Last_Day_Cure
+  Text 5, 145, 80, 10, "Reason for the sanction"
+  EditBox 90, 140, 200, 15, Reason_for_Sanction
+  Text 5, 165, 85, 10, "Impact to other programs"
+  EditBox 95, 160, 195, 30, Impact_Other_Programs
+  Text 5, 200, 145, 20, "Communicated with client to cure santion by sending (i.e., SPEC/MEMO)"
+  EditBox 155, 200, 135, 15, Memo_to_Client
+  Text 5, 230, 105, 25, "Vendor information (if vendoring due to the sanction, vendor #, etc.) "
+  EditBox 115, 230, 175, 25, Vendor_Information
+  Text 5, 260, 95, 20, "Status update information was sent to:"
+  CheckBox 105, 265, 90, 15, " Employment Services", Update_Sent_ES_Checkbox
+  CheckBox 195, 265, 85, 15, "Child Care Assistance", Update_Sent_CCA_Checkbox
+  CheckBox 5, 285, 30, 10, "FIAT", Fiat_Checkbox
+  Text 5, 305, 70, 10, "Sign your case note"
+  EditBox 80, 300, 90, 15, worker_signature
   ButtonGroup ButtonPressed
-    OkButton 175, 275, 50, 15
-    CancelButton 230, 275, 50, 15
+    OkButton 175, 325, 50, 15
+    CancelButton 230, 325, 50, 15
 EndDialog
 
 
@@ -97,16 +102,18 @@ PF9
 
 
 'Writes case note
-CALL write_new_line_in_case_note("***MFIP Sanction/DWP Disqualification***")
+EMSENDKEY "***" & Sanction_Percentage & " " & Type_Sanction & " SANCTION " & "MEMBER " & HH_Member_Number & " EFF " & Date_Sanction & "***" & "<NEWLINE>"
+
 IF HH_Member_Number <> "" THEN CALL write_editbox_in_case_note("HH Member's Number", HH_Member_Number, 6)
-IF ES_Sanction_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Employment Services sanction")
-IF Child_Support_Sanction_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Child Support sanction")
+IF Type_Sanction <> "" THEN CALL write_editbox_in_case_note("Type of Sanction", Type_Sanction, 6)
 IF Date_Sanction <> "" THEN CALL write_editbox_in_case_note("Effective date of sanction/disqualification", Date_Sanction, 6)
 IF Number_Occurrences <> "" THEN CALL write_editbox_in_case_note("Number of occurences", Number_Occurrences, 6)
-IF Ten_Percent_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Sanction Percent is 10%")
-IF Thirty_Percent_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Sanction Percent is 30%")
-IF Hundred_Percent_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Sanction Percent is 100%")
+IF Sanction_Percentage <> "" THEN CALL write_editbox_in_case_note("Sanction Percent is", Sanction_Percentage, 6)
+IF Sanction_Notification_Received<> "" THEN CALL write_editbox_in_case_note("Sanction information received from", Sanction_Notification_Received, 6)
 IF Last_Day_Cure <> "" THEN CALL write_editbox_in_case_note("Last day to cure", Last_Day_Cure, 6)
+IF Reason_for_Sanction <> "" THEN CALL write_editbox_in_case_note ("Reason for the sanction", Reason_for_Sanction, 6)
+IF Impact_Other_Programs <> "" THEN CALL write_editbox_in_case_note ("Impact to other programs", Impact_Other_Programs, 6)
+IF Memo_to_Client <> "" THEN CALL write_editbox_in_case_note ("Communicated with client to cure sanction by sending", Memo_to_Client, 6)
 IF Vendor_Information <> "" THEN CALL write_editbox_in_case_note("Vendoring information", Vendor_Information, 6)
 IF Update_Sent_ES_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Status update information was sent to Employment Services")
 IF Update_Sent_CCA_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Status update information was sent to Child Care Assistance")
@@ -117,6 +124,11 @@ IF FIAT_Checkbox = 1 THEN CALL write_new_line_in_case_note("* FIATed")
 'case note worker signature
 CALL write_new_line_in_case_note("---")
 CALL write_new_line_in_case_note(worker_signature)
+
+
+
+
+
 
 
 
