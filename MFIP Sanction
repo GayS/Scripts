@@ -44,30 +44,31 @@ BeginDialog MFIP_Sanction_DWP_Disq_Dialog, 0, 0, 296, 345, "MFIP Sanction - DWP 
   EditBox 150, 45, 90, 15, Date_Sanction
   Text 5, 70, 75, 10, "Number of occurences"
   EditBox 90, 65, 30, 15, Number_Occurrences
-  Text 5, 85, 125, 10, "Sanction Percent (10%, 30%, or 100%)"
-  EditBox 145, 80, 50, 15, Sanction_Percentage
-  Text 5, 105, 145, 10, "Sanction information received from and how"
-  EditBox 150, 100, 140, 15, Sanction_Notification_Received
-  Text 5, 125, 170, 10, "Last day to cure (10 day cutoff or last day of month)"
-  EditBox 180, 120, 70, 15, Last_Day_Cure
-  Text 5, 145, 80, 10, "Reason for the sanction"
-  EditBox 90, 140, 200, 15, Reason_for_Sanction
-  Text 5, 165, 85, 10, "Impact to other programs"
-  EditBox 95, 160, 195, 30, Impact_Other_Programs
-  Text 5, 200, 145, 20, "Communicated with client to cure santion by sending (i.e., SPEC/MEMO)"
-  EditBox 155, 200, 135, 15, Memo_to_Client
-  Text 5, 230, 105, 25, "Vendor information (if vendoring due to the sanction, vendor #, etc.) "
-  EditBox 115, 230, 175, 25, Vendor_Information
-  Text 5, 260, 95, 20, "Status update information was sent to:"
-  CheckBox 105, 265, 90, 15, " Employment Services", Update_Sent_ES_Checkbox
-  CheckBox 195, 265, 85, 15, "Child Care Assistance", Update_Sent_CCA_Checkbox
-  CheckBox 5, 285, 30, 10, "FIAT", Fiat_Checkbox
+  Text 155, 70, 70, 10, "Sanction Percentage"
+  DropListBox 230, 70, 60, 15, "Select One:"+chr(9)+"10%"+chr(9)+"30%"+chr(9)+"100%", Sanction_Percentage
+  Text 5, 95, 145, 10, "Sanction information received from and how"
+  EditBox 150, 90, 140, 15, Sanction_Notification_Received
+  Text 5, 115, 170, 10, "Last day to cure (10 day cutoff or last day of month)"
+  EditBox 180, 110, 70, 15, Last_Day_Cure
+  Text 5, 135, 80, 10, "Reason for the sanction"
+  EditBox 90, 130, 200, 15, Reason_for_Sanction
+  Text 5, 155, 85, 10, "Impact to other programs"
+  EditBox 95, 150, 195, 30, Impact_Other_Programs
+  Text 5, 190, 145, 20, "Communicated with client to cure santion by sending (i.e., SPEC/MEMO)"
+  EditBox 155, 190, 135, 15, Memo_to_Client
+  Text 5, 220, 105, 25, "Vendor information (if vendoring due to the sanction, vendor #, etc.) "
+  EditBox 115, 220, 175, 25, Vendor_Information
+  Text 5, 250, 105, 20, "Status update information was sent to:"
+  CheckBox 115, 255, 90, 15, " Employment Services", Update_Sent_ES_Checkbox
+  CheckBox 205, 255, 85, 15, "Child Care Assistance", Update_Sent_CCA_Checkbox
+  CheckBox 5, 275, 125, 10, "Check here if you FIATed this case", Fiat_Checkbox
   Text 5, 305, 70, 10, "Sign your case note"
   EditBox 80, 300, 90, 15, worker_signature
   ButtonGroup ButtonPressed
     OkButton 175, 325, 50, 15
     CancelButton 230, 325, 50, 15
 EndDialog
+
 
 
 'THE SCRIPT--------------------------------------------
@@ -117,7 +118,8 @@ IF Memo_to_Client <> "" THEN CALL write_editbox_in_case_note ("Communicated with
 IF Vendor_Information <> "" THEN CALL write_editbox_in_case_note("Vendoring information", Vendor_Information, 6)
 IF Update_Sent_ES_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Status update information was sent to Employment Services")
 IF Update_Sent_CCA_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Status update information was sent to Child Care Assistance")
-IF FIAT_Checkbox = 1 THEN CALL write_new_line_in_case_note("* FIATed")
+IF FIAT_Checkbox = 1 THEN CALL write_new_line_in_case_note("* Case has been FIATed")
+
 
 
 
